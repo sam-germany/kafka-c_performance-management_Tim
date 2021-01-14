@@ -9,31 +9,39 @@ public class PerformanceAppraisalApprovedMessage {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+
 		PerformanceAppraisalApprovedMessage other = (PerformanceAppraisalApprovedMessage) obj;
+
 		if (appraisalId == null) {
-			if (other.appraisalId != null)
-				return false;
-		} else if (!appraisalId.equals(other.appraisalId))
-			return false;
+			if (other.appraisalId != null) return false;
+		} else if (!appraisalId.equals(other.appraisalId)) return false;
+
 		if (employeeId == null) {
-			if (other.employeeId != null)
-				return false;
-		} else if (!employeeId.equals(other.employeeId))
-			return false;
+			if (other.employeeId != null) return false;
+		} else if (!employeeId.equals(other.employeeId)) return false;
+
 		if (grade == null) {
-			if (other.grade != null)
-				return false;
-		} else if (!grade.equals(other.grade))
-			return false;
-		if (score != other.score)
-			return false;
+			if (other.grade != null) return false;
+		} else if (!grade.equals(other.grade)) return false;
+
+		if (score != other.score) return false;
+
 		return true;
+	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((appraisalId == null) ? 0 : appraisalId.hashCode());
+		result = prime * result + ((employeeId == null) ? 0 : employeeId.hashCode());
+		result = prime * result + ((grade == null) ? 0 : grade.hashCode());
+		result = prime * result + score;
+		return result;
 	}
 
 	public String getAppraisalId() {
@@ -50,17 +58,6 @@ public class PerformanceAppraisalApprovedMessage {
 
 	public int getScore() {
 		return score;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((appraisalId == null) ? 0 : appraisalId.hashCode());
-		result = prime * result + ((employeeId == null) ? 0 : employeeId.hashCode());
-		result = prime * result + ((grade == null) ? 0 : grade.hashCode());
-		result = prime * result + score;
-		return result;
 	}
 
 	public void setAppraisalId(String appraisalId) {

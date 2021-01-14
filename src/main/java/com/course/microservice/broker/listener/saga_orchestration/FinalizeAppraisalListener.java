@@ -1,16 +1,15 @@
 package com.course.microservice.broker.listener.saga_orchestration;
 
-import java.util.UUID;
-
+import com.course.microservice.broker.message.FinalizeAppraisalMessage;
+import com.course.microservice.entity.PerformanceAppraisalStatus;
+import com.course.microservice.repository.PerformanceAppraisalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import com.course.microservice.broker.message.FinalizeAppraisalMessage;
-import com.course.microservice.entity.PerformanceAppraisalStatus;
-import com.course.microservice.repository.PerformanceAppraisalRepository;
+import java.util.UUID;
 
 @Component
 public class FinalizeAppraisalListener {
@@ -25,14 +24,12 @@ public class FinalizeAppraisalListener {
 		// finalize appraisal
 		// ...
 
-		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVED.toString(),
-				UUID.fromString(appraisalId));
+		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVED.toString(), UUID.fromString(appraisalId));
 	}
 
 	@KafkaListener(topics = "t.saga03.performancemanagement.request")
 	public void listenFinalizeAppraisal(FinalizeAppraisalMessage message) {
-		LOG.debug("[Orchestration-Saga] Listening finalize appraisal message for appraisal {}",
-				message.getAppraisalId());
+		LOG.debug("[Orchestration-Saga] Listening finalize appraisal message for appraisal {}", message.getAppraisalId());
 
 		this.finalizePerformanceAppraisal(message.getAppraisalId());
 	}

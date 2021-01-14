@@ -1,16 +1,15 @@
 package com.course.microservice.command.service;
 
-import java.util.UUID;
-
+import com.course.microservice.broker.message.PerformanceAppraisalApprovedMessage;
+import com.course.microservice.broker.publisher.PerformanceAppraisalApprovedPublisher;
+import com.course.microservice.entity.PerformanceAppraisalStatus;
+import com.course.microservice.repository.PerformanceAppraisalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.course.microservice.broker.message.PerformanceAppraisalApprovedMessage;
-import com.course.microservice.broker.publisher.PerformanceAppraisalApprovedPublisher;
-import com.course.microservice.entity.PerformanceAppraisalStatus;
-import com.course.microservice.repository.PerformanceAppraisalRepository;
+import java.util.UUID;
 
 @Service
 public class CoreographyPerformanceAppraisalService {
@@ -24,17 +23,19 @@ public class CoreographyPerformanceAppraisalService {
 	private PerformanceAppraisalRepository repository;
 
 	public void approveCompensatingPerformanceAppraisal(String appraisalId) {
-		// if appraisal already final, don't do anything
+
+
+		//
 		var appraisal = repository.findById(UUID.fromString(appraisalId)).orElseThrow();
+
 		if (appraisal.isFinalState()) {
 			return;
 		}
 
 		LOG.debug("[Choreography-Compensating Saga] Approving performance appraisal");
 
-		// 1. change status to 'approval on progress'
-		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(),
-				UUID.fromString(appraisalId));
+		// 1.
+repository.updatePerformanceAppraisalStatusById( PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(),UUID.fromString(appraisalId) );
 
 		// 2. publish 'appraisal approved message' to kafka
 		var appraisalApprovedMessage = new PerformanceAppraisalApprovedMessage();
@@ -47,15 +48,17 @@ public class CoreographyPerformanceAppraisalService {
 	}
 
 	public void approvePerformanceAppraisal(String appraisalId) {
-		// if appraisal already final, don't do anything
+
+		//  here we are checking through the DB that record with this id is their or not
 		var appraisal = repository.findById(UUID.fromString(appraisalId)).orElseThrow();
-		if (appraisal.isFinalState()) {
-			return;
+
+		if (appraisal.isFinalState()) {       // see class PerformanceAppraisal  their he create this method if it return true
+			return;                           // then just return the call and do not execute the code further down
 		}
 
 		LOG.debug("[Choreography-Saga] Approving performance appraisal");
 
-		// 1. change status to 'approval on progress'
+		// 1. here we are updating the Table performance_appraisal the "status" from  "NEW"  to  "APPROVAL_ON_PROGRESS"
 		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(),
 				UUID.fromString(appraisalId));
 

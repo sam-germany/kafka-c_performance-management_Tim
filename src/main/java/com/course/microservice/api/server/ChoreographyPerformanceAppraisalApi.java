@@ -20,8 +20,10 @@ public class ChoreographyPerformanceAppraisalApi {
 	private CoreographyPerformanceAppraisalService service;
 
 	@PostMapping(value = "/approval/{appraisal_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PerformanceAppraisalApprovalResponse> approvePerformanceAppraisal(
-			@PathVariable(name = "appraisal_id", required = true) String appraisalId) {
+	public ResponseEntity<PerformanceAppraisalApprovalResponse> approvePerformanceAppraisal(@PathVariable(name = "appraisal_id", required = true) String appraisalId) {
+
+
+
 		service.approvePerformanceAppraisal(appraisalId);
 
 		var responseBody = new PerformanceAppraisalApprovalResponse();
@@ -30,5 +32,4 @@ public class ChoreographyPerformanceAppraisalApi {
 
 		return ResponseEntity.ok().body(responseBody);
 	}
-
 }

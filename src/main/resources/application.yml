@@ -13,7 +13,8 @@ spring:
       additional-paths:
       - conf/**
   kafka:
-    listener:      missing-topics-fatal: false
+    listener:
+      missing-topics-fatal: false
     producer:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer        
     consumer:

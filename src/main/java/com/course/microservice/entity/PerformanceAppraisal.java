@@ -1,31 +1,25 @@
 package com.course.microservice.entity;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 public class PerformanceAppraisal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(columnDefinition = "BINARY(16)")
-	private UUID appraisalId;
+	@Column(columnDefinition = "BINARY(16)")      // if we use "BINARY(16)"   for a  UUID  column value then we will not get
+	private UUID appraisalId;                     // any error
 
-	@JsonIgnore
-	@CreationTimestamp
-	@Column(nullable = false)
-	private LocalDateTime createdDateTime;
+	@JsonIgnore                        // this property will not be transfered by the json while serialization and deserialization
+	@CreationTimestamp                 // it will take the date time from the virtual machine and set to this property ,when first time
+	@Column(nullable = false)                                   // the object is created then only it will set this value, if again it is updated
+	private LocalDateTime createdDateTime;                    // then it will not modify this value
 
 	@Column(nullable = false, length = 30)
 	private String employeeId;
@@ -34,8 +28,8 @@ public class PerformanceAppraisal {
 	private String grade;
 
 	@JsonIgnore
-	@UpdateTimestamp
-	@Column(nullable = false)
+	@UpdateTimestamp                       // it will take the current time from the virtual machine and put to this property only when the
+	@Column(nullable = false)                          // this object is updated, it will be null for the first time
 	private LocalDateTime lastUpdatedDateTime;
 
 	@Column(nullable = false)
@@ -43,6 +37,14 @@ public class PerformanceAppraisal {
 
 	@Column(nullable = false, length = 30)
 	private String status;
+
+	@JsonIgnore
+	public boolean isFinalState() {
+		return
+getStatus().equals(PerformanceAppraisalStatus.APPROVED.toString())	|| getStatus().equals(PerformanceAppraisalStatus.APPROVAL_ERROR.toString());
+	}
+
+
 
 	public UUID getAppraisalId() {
 		return appraisalId;
@@ -72,11 +74,7 @@ public class PerformanceAppraisal {
 		return status;
 	}
 
-	@JsonIgnore
-	public boolean isFinalState() {
-		return getStatus().equals(PerformanceAppraisalStatus.APPROVED.toString())
-				|| getStatus().equals(PerformanceAppraisalStatus.APPROVAL_ERROR.toString());
-	}
+
 
 	public void setAppraisalId(UUID appraisalId) {
 		this.appraisalId = appraisalId;
