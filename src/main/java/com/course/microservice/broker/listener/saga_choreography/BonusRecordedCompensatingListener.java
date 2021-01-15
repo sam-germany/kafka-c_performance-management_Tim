@@ -10,10 +10,12 @@ import org.springframework.stereotype.Component;
 import com.course.microservice.broker.message.BonusRecordedMessage;
 import com.course.microservice.broker.message.RecordBonusErrorMessage;
 import com.course.microservice.command.service.CoreographyPerformanceAppraisalService;
-
+/*
+Note: we are listning this topic form the  "organization-development" and their it can send normal message or Error message through the topic
+so as we are getting 2 types of messages so here we create 2 methods with  @KafkaHandler(), each take another type of argument
+if normal message then first method and if error message then second method with @KafkaHandler() will be called
+ */
 @Component
-//use @KafkaListener here, combined with @KafkaHandler on method, for possibility of multi-type messages in one topic
-//method will be invoked based on data type received by listener
 @KafkaListener(topics = "t.saga02.organizationdevelopment")
 public class BonusRecordedCompensatingListener {
 
@@ -35,16 +37,16 @@ public class BonusRecordedCompensatingListener {
 		performanceAppraisalService.finalizePerformanceAppraisal(message.getAppraisalId());
 	}
 
+
+
 	@KafkaHandler
 	public void listenErrorFromBonusRecord(RecordBonusErrorMessage message) throws InterruptedException {
-		LOG.debug("[Choreography-Compensating Saga] Listening bonus record error message for appraisal {}",
-				message.getAppraisalId());
+		LOG.debug("[Choreography-Compensating Saga] Listening bonus record error message for appraisal {}", message.getAppraisalId());
 
 		// simulate compensation
 		Thread.sleep(3000);
 
-		LOG.debug("[Choreography-Compensating Saga] Compensate previous transaction, e.g. create log history, "
-				+ "then update status to error");
+		LOG.debug("[Choreography-Compensating Saga] Compensate previous transaction, e.g. create log history, then update status to error");
 
 		// update appraisal status to error
 		performanceAppraisalService.errorPerformanceAppraisal(message.getAppraisalId());

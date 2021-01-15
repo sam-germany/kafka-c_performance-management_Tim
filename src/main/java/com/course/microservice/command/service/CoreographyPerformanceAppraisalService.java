@@ -59,8 +59,8 @@ repository.updatePerformanceAppraisalStatusById( PerformanceAppraisalStatus.APPR
 		LOG.debug("[Choreography-Saga] Approving performance appraisal");
 
 		// 1. here we are updating the Table performance_appraisal the "status" from  "NEW"  to  "APPROVAL_ON_PROGRESS"
-		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(),
-				UUID.fromString(appraisalId));
+     repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(),
+			                                                                                      UUID.fromString(appraisalId));
 
 		// 2. publish 'appraisal approved message' to kafka
 		var appraisalApprovedMessage = new PerformanceAppraisalApprovedMessage();
@@ -77,17 +77,17 @@ repository.updatePerformanceAppraisalStatusById( PerformanceAppraisalStatus.APPR
 		// Compensate previous transaction, e.g. update status, etc
 		// ...
 
-		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVAL_ERROR.toString(),
-				UUID.fromString(appraisalId));
+      repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVAL_ERROR.toString(),
+			                                                                                   UUID.fromString(appraisalId));
 	}
+
 
 	public void finalizePerformanceAppraisal(String appraisalId) {
 		// ...
 		// finalize appraisal
 		// ...
-
-		repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVED.toString(),
-				UUID.fromString(appraisalId));
+      repository.updatePerformanceAppraisalStatusById(PerformanceAppraisalStatus.APPROVED.toString(),
+			                                                                                   UUID.fromString(appraisalId));
 	}
 
 }
