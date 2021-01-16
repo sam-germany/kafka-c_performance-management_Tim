@@ -1,16 +1,9 @@
 package com.course.microservice.entity;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cqrs_outbox")
@@ -43,6 +36,10 @@ public class CqrsOutbox {
 
 	@Column(nullable = false, length = 80, name = "transaction_type")
 	private String transcationType;
+
+
+
+
 
 	public String getAggregateId() {
 		return aggregateId;

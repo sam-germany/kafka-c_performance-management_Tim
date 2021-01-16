@@ -29,9 +29,12 @@ public class CqrsPerformanceHistoryService {
 	}
 
 	public void updatePerformanceHistory_BonusPaid(CqrsPerformanceBonusMessage paidBonusMessage) {
-		action.updatePerformanceHistory_BonusPaid(paidBonusMessage.getBonusAmount(),
-				paidBonusMessage.getBonusPaidDate(), paidBonusMessage.getPaidToBankAccount(),
-				paidBonusMessage.getAppraisalId());
+
+		action.updatePerformanceHistory_BonusPaid( paidBonusMessage.getBonusAmount(),
+				                                   paidBonusMessage.getBonusPaidDate(),
+				                                   paidBonusMessage.getPaidToBankAccount(),
+				                                   paidBonusMessage.getAppraisalId()
+		);
 	}
 
 }

@@ -34,8 +34,7 @@ public class CqrsPerformanceHistoryListener {
 	private CqrsPerformanceHistoryService service;
 
 	private void createNewPerformanceHistory(long timestamp, PerformanceAppraisal performanceAppraisal) {
-		LOG.debug("[CQRS-01] Creating new performance history for appraisal id {}",
-				performanceAppraisal.getAppraisalId());
+		LOG.debug("[CQRS-01] Creating new performance history for appraisal id {}", performanceAppraisal.getAppraisalId());
 
 		var outboxTimestamp = localDateTimeUtil.fromMillis(timestamp);
 		performanceAppraisal.setCreatedDateTime(outboxTimestamp);
@@ -44,40 +43,39 @@ public class CqrsPerformanceHistoryListener {
 		service.createNewPerformanceHistory(performanceAppraisal);
 	}
 
-	@KafkaListener(topics = { "t.cqrs01.performancemanagement.outbox.performance-appraisal",
-			"t.cqrs01.payrollcompensation.outbox.performance-appraisal" }, containerFactory = "stringDeserializerContainerFactory")
+	@KafkaListener( topics = { "t.cqrs01.performancemanagement.outbox.performance-appraisal", "t.cqrs01.payrollcompensation.outbox.performance-appraisal" },
+			        containerFactory = "stringDeserializerContainerFactory")
 	public void onPerformanceManagementDataChanged(@Header(name = KafkaHeaders.RECEIVED_TIMESTAMP) long timestamp,
-			@Payload String message) throws JsonMappingException, JsonProcessingException {
+			                                       @Payload String message) throws JsonMappingException, JsonProcessingException {
+
 		var outboxMessage = objectMapper.readValue(message, CqrsOutboxMessage.class);
 
 		// convert payload to correct class, based on outbox event type
-		if (StringUtils.equalsAny(outboxMessage.getPayload().getEventType(), CqrsOutboxEventType.NEW,
-				CqrsOutboxEventType.APPROVAL_ON_PROGRESS, CqrsOutboxEventType.APPROVED)) {
-			var performanceAppraisal = objectMapper.readValue(outboxMessage.getPayload().getPayload(),
-					PerformanceAppraisal.class);
+		if (StringUtils.equalsAny( outboxMessage.getPayload().getEventType(),
+				                   CqrsOutboxEventType.NEW,
+                                   CqrsOutboxEventType.APPROVAL_ON_PROGRESS,
+				                   CqrsOutboxEventType.APPROVED)  ) {
+
+			var performanceAppraisal = objectMapper.readValue(outboxMessage.getPayload().getPayload(), PerformanceAppraisal.class);
 
 			switch (outboxMessage.getPayload().getEventType()) {
-			case CqrsOutboxEventType.NEW:
-				createNewPerformanceHistory(timestamp, performanceAppraisal);
+			case CqrsOutboxEventType.NEW:    createNewPerformanceHistory(timestamp, performanceAppraisal);
 				break;
-			case CqrsOutboxEventType.APPROVAL_ON_PROGRESS:
-				updatePerformanceHistory_ApprovalOnProgress(timestamp, performanceAppraisal);
+			case CqrsOutboxEventType.APPROVAL_ON_PROGRESS:  updatePerformanceHistory_ApprovalOnProgress(timestamp, performanceAppraisal);
 				break;
-			case CqrsOutboxEventType.APPROVED:
-				updatePerformanceHistory_Approved(timestamp, performanceAppraisal);
+			case CqrsOutboxEventType.APPROVED: updatePerformanceHistory_Approved(timestamp, performanceAppraisal);
 				break;
 			}
+
 		} else if (StringUtils.equalsAny(outboxMessage.getPayload().getEventType(), CqrsOutboxEventType.BONUS_PAID)) {
-			var paidBonusMessage = objectMapper.readValue(outboxMessage.getPayload().getPayload(),
-					CqrsPerformanceBonusMessage.class);
+			var paidBonusMessage = objectMapper.readValue(outboxMessage.getPayload().getPayload(), CqrsPerformanceBonusMessage.class);
+
 			updatePerformanceHistory_BonusPaid(paidBonusMessage);
 		}
 	}
 
-	private void updatePerformanceHistory_ApprovalOnProgress(long timestamp,
-			PerformanceAppraisal performanceAppraisal) {
-		LOG.debug("[CQRS-01] Appraisal on progress, updating performance history for appraisal id {}",
-				performanceAppraisal.getAppraisalId());
+	private void updatePerformanceHistory_ApprovalOnProgress(long timestamp, PerformanceAppraisal performanceAppraisal) {
+		LOG.debug("[CQRS-01] Appraisal on progress, updating performance history for appraisal id {}", performanceAppraisal.getAppraisalId());
 
 		var outboxTimestamp = localDateTimeUtil.fromMillis(timestamp);
 		performanceAppraisal.setLastUpdatedDateTime(outboxTimestamp);
@@ -86,8 +84,7 @@ public class CqrsPerformanceHistoryListener {
 	}
 
 	private void updatePerformanceHistory_Approved(long timestamp, PerformanceAppraisal performanceAppraisal) {
-		LOG.debug("[CQRS-01] Appraisal approved, updating performance history for appraisal id {}",
-				performanceAppraisal.getAppraisalId());
+		LOG.debug("[CQRS-01] Appraisal approved, updating performance history for appraisal id {}", performanceAppraisal.getAppraisalId());
 
 		var outboxTimestamp = localDateTimeUtil.fromMillis(timestamp);
 		performanceAppraisal.setLastUpdatedDateTime(outboxTimestamp);
@@ -96,8 +93,7 @@ public class CqrsPerformanceHistoryListener {
 	}
 
 	private void updatePerformanceHistory_BonusPaid(CqrsPerformanceBonusMessage paidBonusMessage) {
-		LOG.debug("[CQRS-01] Bonus paid, updating performance history for appraisal id {}",
-				paidBonusMessage.getAppraisalId());
+		LOG.debug("[CQRS-01] Bonus paid, updating performance history for appraisal id {}", paidBonusMessage.getAppraisalId());
 
 		service.updatePerformanceHistory_BonusPaid(paidBonusMessage);
 	}

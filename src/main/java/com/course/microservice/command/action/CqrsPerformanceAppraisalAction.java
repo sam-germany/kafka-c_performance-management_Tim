@@ -1,16 +1,15 @@
 package com.course.microservice.command.action;
 
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.course.microservice.broker.message.PerformanceAppraisalApprovedMessage;
 import com.course.microservice.broker.publisher.CqrsPerformanceAppraisalPublisher;
 import com.course.microservice.entity.PerformanceAppraisal;
 import com.course.microservice.entity.PerformanceAppraisalStatus;
 import com.course.microservice.repository.PerformanceAppraisalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Component
 public class CqrsPerformanceAppraisalAction {
@@ -55,8 +54,9 @@ public class CqrsPerformanceAppraisalAction {
 	}
 
 	public void updateStatusToApproval(PerformanceAppraisal performanceAppraisal) {
+
 		transactionRepository.updatePerformanceAppraisalStatusById(
-				PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(), performanceAppraisal.getAppraisalId());
+				 PerformanceAppraisalStatus.APPROVAL_ON_PROGRESS.toString(), performanceAppraisal.getAppraisalId());
 	}
 
 }

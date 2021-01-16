@@ -20,8 +20,8 @@ public class OrchestrationCompensatingPerformanceAppraisalApi {
 	private OrchestrationCompensatingPerformanceAppraisalSaga saga;
 
 	@PostMapping(value = "/approval_compensation/{appraisal_id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PerformanceAppraisalApprovalResponse> approveCompensatingPerformanceAppraisal(
-			@PathVariable(name = "appraisal_id", required = true) String appraisalId) {
+	public ResponseEntity<PerformanceAppraisalApprovalResponse> approveCompensatingPerformanceAppraisal(@PathVariable(name = "appraisal_id", required = true) String appraisalId) {
+
 		saga.approvePerformanceAppraisal(appraisalId);
 
 		var responseBody = new PerformanceAppraisalApprovalResponse();

@@ -1,7 +1,9 @@
 package com.course.microservice.command.service;
 
-import java.util.UUID;
-
+import com.course.microservice.broker.message.*;
+import com.course.microservice.broker.publisher.OrchestrationSagaPublisher;
+import com.course.microservice.entity.PerformanceAppraisalStatus;
+import com.course.microservice.repository.PerformanceAppraisalRepository;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,15 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.course.microservice.broker.message.BonusPaidMessage;
-import com.course.microservice.broker.message.BonusRecordedMessage;
-import com.course.microservice.broker.message.FinalizeAppraisalMessage;
-import com.course.microservice.broker.message.PayBonusMessage;
-import com.course.microservice.broker.message.RecordBonusErrorMessage;
-import com.course.microservice.broker.message.RecordBonusMessage;
-import com.course.microservice.broker.publisher.OrchestrationSagaPublisher;
-import com.course.microservice.entity.PerformanceAppraisalStatus;
-import com.course.microservice.repository.PerformanceAppraisalRepository;
+import java.util.UUID;
 
 @Service
 public class OrchestrationCompensatingPerformanceAppraisalSaga {
@@ -66,7 +60,7 @@ public class OrchestrationCompensatingPerformanceAppraisalSaga {
 		finalizeAppraisalMessage.setBonusRecordedDateTime(convertedMessage.getBonusRecordedDateTime());
 
 		LOG.debug("[Orchestration-Compensating Saga] Publishing to finalize appraisal request topic for appraisal {}",
-				finalizeAppraisalMessage.getAppraisalId());
+				                                                                 finalizeAppraisalMessage.getAppraisalId());
 		publisher.publishToFinalizeAppraisal(finalizeAppraisalMessage);
 	}
 
@@ -99,13 +93,17 @@ public class OrchestrationCompensatingPerformanceAppraisalSaga {
 		recordBonusMessage.setBonusPaidDateTime(message.getBonusPaidDateTime());
 		recordBonusMessage.setBonusAmount(message.getBonusAmount());
 
-		LOG.debug("[Orchestration-Compensating Saga] Publishing to record bonus request topic for appraisal {}",
-				recordBonusMessage.getAppraisalId());
+		LOG.debug("[Orchestration-Compensating Saga] Publishing to record bonus request topic for appraisal {}", recordBonusMessage.getAppraisalId());
+
 		publisher.publishToCompensatingRecordBonus(recordBonusMessage);
 	}
 
 	@KafkaListener(topics = "t.saga04.organizationdevelopment.response")
 	public void listenBonusRecordResponse(ConsumerRecord<String, Object> message) throws InterruptedException {
+                                                // this is the output of this printout
+System.out.println(message.value() +"-----"); //BonusRecordedMessage [appraisalId=83df4a6b-7605-4909-afbb-7a7bf188fb20, bonusRecordedDateTime=2021-06-30T19:52:34.386580700]
+
+
 		if (message.value() instanceof RecordBonusErrorMessage) {
 			handleRecordBonusError((RecordBonusErrorMessage) message.value());
 			return;

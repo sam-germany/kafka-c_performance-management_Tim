@@ -17,16 +17,15 @@ public class CqrsOutboxAction {
 	@Autowired
 	private CqrsOutboxRepository outboxRepository;
 
-	public void deleteOutbox(CqrsOutbox outbox) {
-		outboxRepository.delete(outbox);
-	}
 
-	public CqrsOutbox insertOutbox(CqrsOutbox cqrsOutbox) {
-		return outboxRepository.save(cqrsOutbox);
-	}
+	public void deleteOutbox(CqrsOutbox outbox) { outboxRepository.delete(outbox); }
 
-	public CqrsOutbox insertOutbox(String aggregateType, String aggregateId, String transactionType, Object payload)
-			throws JsonProcessingException {
+
+	public CqrsOutbox insertOutbox(CqrsOutbox cqrsOutbox) { return outboxRepository.save(cqrsOutbox); }
+
+
+	public CqrsOutbox insertOutbox(String aggregateType, String aggregateId, String transactionType, Object payload) throws JsonProcessingException {
+
 		var cqrsOutbox = new CqrsOutbox();
 
 		cqrsOutbox.setAggregateType(aggregateType);

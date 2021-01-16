@@ -1,17 +1,16 @@
 package com.course.microservice.command.action;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.course.microservice.entity.CqrsPerformanceHistory;
 import com.course.microservice.entity.PerformanceAppraisal;
 import com.course.microservice.entity.PerformanceAppraisalStatus;
 import com.course.microservice.repository.CqrsPerformanceHistoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Component
 public class CqrsPerformanceHistoryAction {
@@ -50,8 +49,8 @@ public class CqrsPerformanceHistoryAction {
 				lastUpdatedDateTime, appraisalId);
 	}
 
-	public void updatePerformanceHistory_BonusPaid(double bonusAmount, LocalDate bonusPaidDate,
-			String paidToBankAccount, UUID appraisalId) {
+	public void updatePerformanceHistory_BonusPaid(double bonusAmount, LocalDate bonusPaidDate, String paidToBankAccount, UUID appraisalId) {
+
 		repository.updatePerformanceHistory_BonusPaid(bonusAmount, bonusPaidDate, paidToBankAccount, appraisalId);
 	}
 
