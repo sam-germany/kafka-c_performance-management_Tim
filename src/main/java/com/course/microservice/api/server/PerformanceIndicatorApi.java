@@ -29,8 +29,8 @@ public class PerformanceIndicatorApi {
 	private PerformanceIndicatorQueryService queryService;
 
 	@PutMapping(value = { "", "/" }, produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> createDummyData(
-			@RequestParam(name = "data_size", required = true, defaultValue = "500") int dataSize) {
+	public ResponseEntity<String> createDummyData( @RequestParam(name = "data_size", required = true, defaultValue = "500") int dataSize) {
+
 		if (dataSize < 1 || dataSize > 1000) {
 			return ResponseEntity.badRequest().body("data_size must between 1 and 1000");
 		}
@@ -39,13 +39,13 @@ public class PerformanceIndicatorApi {
 		commandService.createDummyData(dataSize);
 
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body("Created " + dataSize + " dummy data (any old data removed)");
+             				.body("Created " + dataSize + " dummy data (any old data removed)");
 	}
 
 	@GetMapping(value = { "", "/" }, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PerformanceIndicatorResult> getDummyData(
-			@RequestParam(name = "page", defaultValue = "0") int page,
-			@RequestParam(name = "size", defaultValue = "10") int size) {
+	public ResponseEntity<PerformanceIndicatorResult> getDummyData(@RequestParam(name = "page", defaultValue = "0") int page,
+			                                                       @RequestParam(name = "size", defaultValue = "10") int size) {
+
 		var total = queryService.getDataCount();
 		var items = queryService.getDataWithPagination(page, size);
 		var result = new PerformanceIndicatorResult(items, total);

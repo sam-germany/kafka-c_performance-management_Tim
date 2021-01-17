@@ -78,8 +78,12 @@ public class CqrsPerformanceAppraisalService {
 		transactionAction.finalizePerformanceAppraisal(appraisalId);
 
 		// CQRS
-		var outbox = outboxAction.insertOutbox(OUTBOX_AGGREGATE_TYPE, performanceAppraisal.getAppraisalId().toString(),
-				CqrsOutboxEventType.APPROVED, performanceAppraisal);
+		var outbox = outboxAction.insertOutbox(  OUTBOX_AGGREGATE_TYPE,
+				                                            performanceAppraisal.getAppraisalId().toString(),
+	                                              			CqrsOutboxEventType.APPROVED,
+				                                            performanceAppraisal);
+
+
 		outboxAction.deleteOutbox(outbox);
 	}
 

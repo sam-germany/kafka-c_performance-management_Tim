@@ -43,11 +43,15 @@ public class CqrsPerformanceHistoryListener {
 		service.createNewPerformanceHistory(performanceAppraisal);
 	}
 
-	@KafkaListener( topics = { "t.cqrs01.performancemanagement.outbox.performance-appraisal", "t.cqrs01.payrollcompensation.outbox.performance-appraisal" },
+	@KafkaListener( topics = {   "t.cqrs01.performancemanagement.outbox.abc",
+			                  "t.cqrs01.performancemanagement.outbox.performance-appraisal",
+			                  "t.cqrs01.payrollcompensation.outbox.performance-appraisal"
+	                     },
 			        containerFactory = "stringDeserializerContainerFactory")
 	public void onPerformanceManagementDataChanged(@Header(name = KafkaHeaders.RECEIVED_TIMESTAMP) long timestamp,
 			                                       @Payload String message) throws JsonMappingException, JsonProcessingException {
 
+		System.out.println("------------------555555555555");
 		var outboxMessage = objectMapper.readValue(message, CqrsOutboxMessage.class);
 
 		// convert payload to correct class, based on outbox event type
